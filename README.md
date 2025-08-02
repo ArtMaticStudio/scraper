@@ -1,52 +1,55 @@
-# 🕷️ Freelancer Job Scraper (Python-Focused)
+# 🕷️ Freelancer Job Scraper – Python Developer Focus
 
-This Python script scrapes recent job postings from [Freelancer.com](https://www.freelancer.com/) with a focus on **Python development** work. It filters listings based on relevancy, urgency, and budget, then saves the job links and full descriptions into structured CSV files for further analysis or automation purposes.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
+This Python script automatically scrapes job postings from [Freelancer.com](https://www.freelancer.com/) with a strong focus on Python development roles. It is designed to assist freelancers, data analysts, or automation engineers in finding relevant Python-related gigs that are not urgent, not hourly, and above a minimum price threshold.
 
 ---
 
 ## 🔍 Features
 
-- Scrapes latest jobs from multiple pages (default: 5 pages).
-- Filters listings using:
-  - Python-related keywords
-  - Reasonable deadlines (excludes “urgent” jobs)
-  - Minimum budget threshold ($9)
-  - Excludes hourly jobs
-- Stores data in two stages:
-  - `pending_links_<DATE>.csv` — titles, links, prices
-  - `job_details_<DATE>.csv` — full job descriptions
-- Avoids duplicate entries.
-- Designed to run continuously with a 5-minute delay between cycles.
+- ✅ Searches for jobs containing Python-specific keywords
+- ✅ Filters out jobs that are too urgent or hourly-based
+- ✅ Skips jobs below a defined minimum budget (default: $9)
+- ✅ Collects and saves:
+  - Job title, link, price, timestamp
+  - Full job description
+- ✅ Saves all results to structured CSV files in the `/data` directory
+- ✅ Automatically avoids duplicate links
+- ✅ Runs on an infinite loop with a pause between scraping sessions
 
 ---
 
-## 📁 Directory Structure
+## 📁 Output Directory Structure
 
-```bash
+```
+
 project/
 │
 ├── data/
-│   ├── pending_links_YYYY-MM-DD.csv
-│   └── job_details_YYYY-MM-DD.csv
-├── main.py  # (or your filename)
+│   ├── pending\_links\_YYYY-MM-DD.csv     ← List of filtered job links
+│   └── job\_details\_YYYY-MM-DD.csv       ← Full descriptions of each job
+├── main.py                              ← Your Python script
 └── README.md
+
 ````
 
 ---
 
-## ⚙️ Requirements
+## 🛠️ Installation
 
-Install required Python libraries (if not already):
+1. Clone this repository or copy the script locally.
+2. Install the required libraries:
 
 ```bash
 pip install requests beautifulsoup4
-```
+````
 
 ---
 
-## 🚀 Usage
+## 🚀 How to Run
 
-Run the script from the terminal:
+Simply execute:
 
 ```bash
 python main.py
@@ -54,50 +57,65 @@ python main.py
 
 The script will:
 
-1. Scrape job listings from `freelancer.com/jobs`.
-2. Filter and save relevant job links.
-3. Scrape detailed job descriptions for each saved link.
-4. Save results in the `data/` folder.
+* Scrape the first 5 pages of job listings on Freelancer.com
+* Store filtered job links in a CSV file
+* Extract job descriptions and save them in a separate CSV
+* Repeat the entire process every **5 minutes**
 
-The script loops indefinitely, scraping every 5 minutes.
-
----
-
-## 🎯 Filtering Logic
-
-* **Keywords**: Filters by relevant Python-related terms like `python`, `django`, `web scraping`, etc.
-* **Urgency**: Skips jobs with terms like `urgent`, `asap`, `within 1 hour`, etc.
-* **Budget**: Requires a minimum fixed-price budget of **\$9** (excludes hourly jobs).
-* **Duplicate Handling**: Only saves new job links that have not been recorded before.
+You can stop the process manually by pressing `Ctrl + C`.
 
 ---
 
-## 📦 Output Example
+## 🧠 Filtering Logic
 
-### pending\_links\_YYYY-MM-DD.csv
-
-| title                    | client\_price | link                                                                    | timestamp  |
-| ------------------------ | ------------- | ----------------------------------------------------------------------- | ---------- |
-| Build Python web scraper | \$50          | [https://freelancer.com/projects/](https://freelancer.com/projects/)... | 1 hour ago |
-
-### job\_details\_YYYY-MM-DD.csv
-
-| title                    | client\_price | link                                                                    | timestamp  | description                                              |
-| ------------------------ | ------------- | ----------------------------------------------------------------------- | ---------- | -------------------------------------------------------- |
-| Build Python web scraper | \$50          | [https://freelancer.com/projects/](https://freelancer.com/projects/)... | 1 hour ago | I need a Python script to scrape product prices from ... |
+| Criteria      | Rule                                                                   |
+| ------------- | ---------------------------------------------------------------------- |
+| 🔑 Keywords   | Must contain relevant Python terms like `django`, `web scraping`, etc. |
+| ⏱️ Deadline   | Must **not** contain phrases like `urgent`, `asap`, `in 1 hour`, etc.  |
+| 💲 Budget     | Minimum of **\$9**, hourly jobs are excluded                           |
+| ✅ Relevance   | Uses case-insensitive search through job title and price text          |
+| 🚫 Duplicates | Skips links already saved in previous CSV files                        |
 
 ---
 
-## 🛑 Notes
+## 📦 Output CSV Example
 
-* **Do not abuse** the site. Use reasonable intervals and respect Freelancer.com's [Terms of Service](https://www.freelancer.com/about/terms).
-* This is intended for **educational** and **internal productivity** use only.
+### `pending_links_2025-08-02.csv`
+
+| title                | client\_price | link                                                                             | timestamp  |
+| -------------------- | ------------- | -------------------------------------------------------------------------------- | ---------- |
+| Build Python scraper | \$50          | [https://freelancer.com/projects/abc123](https://freelancer.com/projects/abc123) | 1 hour ago |
+
+### `job_details_2025-08-02.csv`
+
+| title                | client\_price | link                                                                             | timestamp  | description                  |
+| -------------------- | ------------- | -------------------------------------------------------------------------------- | ---------- | ---------------------------- |
+| Build Python scraper | \$50          | [https://freelancer.com/projects/abc123](https://freelancer.com/projects/abc123) | 1 hour ago | I need a script to scrape... |
+
+---
+
+## ⏳ Auto-Loop Behavior
+
+After finishing one complete scraping session (link + detail), the script will:
+
+* Sleep for `300 seconds` (5 minutes)
+* Automatically repeat the process
+
+This ensures fresh data is collected regularly.
+
+---
+
+## ⚠️ Disclaimer
+
+* Do not use this tool for spamming or scraping against Freelancer.com's terms.
+* This is intended for **educational**, **research**, and **personal productivity** use only.
+* Respect `robots.txt` and terms of service of any website you scrape.
 
 ---
 
 ## 📅 Author & License
 
-Created by \[Your Name].
-Licensed under the MIT License.
+Created by **Art Matic Studio** – \[[ sumberagungabadijaya05@gmail.com]( mina120trf@gmail.com)]
+Licensed under the **MIT License**. See [`LICENSE`](./LICENSE) file for full details.
 
 ```
